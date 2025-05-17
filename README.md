@@ -21,8 +21,8 @@ streamlit run app.py
 ```
 
 ## Deployment
-This app is deployed on Streamlit Community Cloud. You can access it at: [Your Streamlit URL will appear here after deployment]
-
+This app is deployed on Streamlit Community Cloud. You can access it at: [https://customspellingbee.streamlit.app/
+](url)
 ## Files
 - `app.py`: Main application file
 - `extract_words.py`: Script to extract and clean words from Numbers file
