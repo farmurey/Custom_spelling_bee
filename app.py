@@ -72,6 +72,8 @@ if 'words_df' not in st.session_state:
     st.session_state.words_df = None
 if 'show_spelling' not in st.session_state:
     st.session_state.show_spelling = False
+if 'pronounce_flag' not in st.session_state:
+    st.session_state.pronounce_flag = False
 
 def load_words():
     """Function to load the word list from CSV"""
@@ -91,47 +93,47 @@ def load_words():
 # Load words if not already loaded
 if st.session_state.words_df is None:
     st.session_state.words_df = load_words()
-
+    
 if st.session_state.words_df is not None:
     # Create two columns for layout
     col1, col2 = st.columns([2, 1])
     
     with col1:
-        # Display current word
+        # All buttons in one row: Next, Show Spelling, Previous
+        col_next, col_spelling, col_prev = st.columns([1, 1, 1])
+
+        with col_next:
+            if st.button("➡️ Next", key="next_btn"):
+                if st.session_state.current_index < len(st.session_state.words_df) - 1:
+                    st.session_state.current_index += 1
+                    st.session_state.show_spelling = False
+                    st.session_state.pronounce_flag = True
+                    st.rerun()
+
+        with col_spelling:
+            if st.button("🆎 Show Spelling", key="spelling_btn"):
+                st.session_state.show_spelling = not st.session_state.show_spelling
+                st.rerun()
+
+        with col_prev:
+            if st.button("⬅️ Previous", key="prev_btn"):
+                if st.session_state.current_index > 0:
+                    st.session_state.current_index -= 1
+                    st.session_state.show_spelling = False
+                    st.session_state.pronounce_flag = True
+                    st.rerun()
+
+        # Automatically pronounce the word if flag is set
         current_word = st.session_state.words_df.iloc[st.session_state.current_index]['Word']
-        with st.container():
-            if st.session_state.show_spelling:
-                st.markdown(f"### {current_word}")
-            else:
-                st.markdown("### _ _ _ _ _")
+        if st.session_state.pronounce_flag:
+            pronounce_word(current_word)
+            st.session_state.pronounce_flag = False
+
+        # Display current word after buttons only if show_spelling is True
+        if st.session_state.show_spelling:
+            st.markdown(f"### {current_word}")
     
     with col2:
         # Progress indicator
         st.progress((st.session_state.current_index + 1) / len(st.session_state.words_df))
         st.markdown(f"Word {st.session_state.current_index + 1} of {len(st.session_state.words_df)}")
-    
-    # All buttons in one row
-    col_pronounce, col_spelling, col_next, col_prev = st.columns(4)
-    
-    with col_pronounce:
-        if st.button("🔊 Pronounce", key="pronounce_btn"):
-            pronounce_word(current_word)
-    
-    with col_spelling:
-        if st.button("🆎 Show Spelling", key="spelling_btn"):
-            st.session_state.show_spelling = not st.session_state.show_spelling
-            st.rerun()
-    
-    with col_next:
-        if st.button("➡️ Next", key="next_btn"):
-            if st.session_state.current_index < len(st.session_state.words_df) - 1:
-                st.session_state.current_index += 1
-                st.session_state.show_spelling = False
-                st.rerun()
-    
-    with col_prev:
-        if st.button("⬅️ Previous", key="prev_btn"):
-            if st.session_state.current_index > 0:
-                st.session_state.current_index -= 1
-                st.session_state.show_spelling = False
-                st.rerun()
