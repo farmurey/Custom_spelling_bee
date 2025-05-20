@@ -1,6 +1,6 @@
 # Spelling Bee Practice App
 
-A Streamlit application for practicing spelling words. The app provides pronunciation, spelling display, and navigation features.
+A Streamlit application for practicing spelling words. The app provides pronunciation, spelling display, and navigation features. This one is customized for a specific list of words.
 
 ## Features
 - Word pronunciation using text-to-speech
